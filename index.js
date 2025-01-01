@@ -9,9 +9,11 @@ require('dotenv').config()
 // middleware
 app.use(express.json());
 app.use(cors({
-    origin: [ 'https://book-app-frontend-mocha.vercel.app'],
-    credentials: true
-}))
+    origin: ['https://book-app-frontend-mocha.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 //varun452005
 //GBjlxRwWmUYWPBRI
 // routes
@@ -27,7 +29,7 @@ app.use("/api/admin", adminRoutes)
 
 async function main() {
   await mongoose.connect(process.env.DB_URL);
-  app.get("/", (req, res) => {
+  app.use("/", (req, res) => {
     res.send("Book Store Server is running!");
   });
 }
