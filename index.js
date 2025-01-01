@@ -27,6 +27,14 @@ app.use("/api/orders", orderRoutes)
 app.use("/api/auth", userRoutes)
 app.use("/api/admin", adminRoutes)
 
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Book Store API" });
+});
+
+app.use("*", (req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
+
 async function main() {
   await mongoose.connect(process.env.DB_URL);
   app.use("/", (req, res) => {
