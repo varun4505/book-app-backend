@@ -23,6 +23,33 @@ const getAllBooks =  async (req, res) => {
     }
 }
 
+// search books
+const searchBooks = async (req, res) => {
+    try {
+        const { query } = req.query;
+        
+        if (!query) {
+            return res.status(400).send({ message: "Search query is required" });
+        }
+        
+        // Create a case-insensitive search query for multiple fields
+        const searchQuery = {
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { category: { $regex: query, $options: 'i' } },
+                { description: { $regex: query, $options: 'i' } }
+            ]
+        };
+        
+        const books = await Book.find(searchQuery).sort({ createdAt: -1 });
+        res.status(200).send(books);
+        
+    } catch (error) {
+        console.error("Error searching books", error);
+        res.status(500).send({ message: "Failed to search books" });
+    }
+}
+
 const getSingleBook = async (req, res) => {
     try {
         const {id} = req.params;
@@ -79,5 +106,6 @@ module.exports = {
     getAllBooks,
     getSingleBook,
     UpdateBook,
-    deleteABook
+    deleteABook,
+    searchBooks
 }

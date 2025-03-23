@@ -9,13 +9,10 @@ require('dotenv').config()
 // middleware
 app.use(express.json());
 app.use(cors({
-    origin: ['http://localhost:5000/','https://book-app-frontend-mocha.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
-//varun452005
-//GBjlxRwWmUYWPBRI
+    origin: ['http://localhost:5173', 'https://book-app-frontend-tau.vercel.app'],
+    credentials: true
+}))
+
 // routes
 const bookRoutes = require('./src/books/book.route');
 const orderRoutes = require("./src/orders/order.route")
@@ -27,16 +24,11 @@ app.use("/api/orders", orderRoutes)
 app.use("/api/auth", userRoutes)
 app.use("/api/admin", adminRoutes)
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Book Store API" });
-});
-
-app.use("*", (req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
-
 async function main() {
   await mongoose.connect(process.env.DB_URL);
+  app.use("/", (req, res) => {
+    res.send("Book Store Server is running!");
+  });
 }
 
 main().then(() => console.log("Mongodb connect successfully!")).catch(err => console.log(err));
